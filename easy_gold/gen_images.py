@@ -39,16 +39,16 @@ def main():
     chainer.serializers.load_npz(args.snapshot, gen)
     np.random.seed(1234)
     with chainer.using_config('train', False), chainer.using_config('enable_backprop', False):
-        x = gen_images(gen, n=args.n_samples, batchsize=args.n_samples)
+        x = gen_images(gen, n=args.n_samples, batchsize=100)
 
     n, c, h, w = x.shape
     for i, img in enumerate(x):
         chainercv.utils.write_image(img, os.path.join(out, '{:05d}.png'.format(i)))
-    rows, columns = args.n_samples, args.n_samples // 100
+    rows, columns = 100, args.n_samples // 100
     x = x.reshape((rows, columns, 3, h, w))
     x = x.transpose(0, 3, 1, 4, 2)
     x_all = x.reshape((rows * h, columns * w, 3))
-    chainercv.utils.write_image(x_all, os.path.join(out, 'all.png'))
+    chainercv.utils.write_image(x_all.transpose(2, 0, 1), os.path.join(out, 'all.png'))
 
 
 if __name__ == '__main__':

@@ -22,7 +22,7 @@ def create_result_dir(result_dir, config_path, config):
         bfn = os.path.basename(fn)
         shutil.copy(fn, '{}/{}'.format(result_dir, bfn))
 
-    copy_to_result_dir(config_path, result_dir)
+    # copy_to_result_dir(config_path, result_dir)
     # copy_to_result_dir(
     #     config.models['generator']['fn'], result_dir)
     # copy_to_result_dir(

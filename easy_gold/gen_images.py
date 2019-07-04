@@ -24,7 +24,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--config_path', type=str, default='configs/base.yml')
     parser.add_argument('--gpu', '-g', type=int, default=0)
-    parser.add_argument('--results_dir', type=str, default='/kaggle/working/output/')
+    parser.add_argument('--results_dir', type=str, default='/kaggle')
     parser.add_argument('--snapshot', type=str, default='')
     parser.add_argument('--n_samples', type=int, default=10000)
     args = parser.parse_args()
@@ -48,11 +48,11 @@ def main():
         chainercv.utils.write_image(img, os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))
     shutil.make_archive('images', 'zip', os.path.join(out, 'images'))
 
-    rows, columns = 100, args.n_samples // 100
-    x = x.reshape((rows, columns, 3, h, w))
-    x = x.transpose(0, 3, 1, 4, 2)
-    x_all = x.reshape((rows * h, columns * w, 3))
-    chainercv.utils.write_image(x_all.transpose(2, 0, 1), os.path.join(out, 'all.png'))
+    # rows, columns = 100, args.n_samples // 100
+    # x = x.reshape((rows, columns, 3, h, w))
+    # x = x.transpose(0, 3, 1, 4, 2)
+    # x_all = x.reshape((rows * h, columns * w, 3))
+    # chainercv.utils.write_image(x_all.transpose(2, 0, 1), '/kaggle/working/all.png')
 
 
 if __name__ == '__main__':

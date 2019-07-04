@@ -38,8 +38,8 @@ models:
         n_classes: 0
 
 dataset:
-  dataset_fn: cifar10.py
-  dataset_name: CIFAR10Dataset
+  dataset_fn: dog.py
+  dataset_name: DogDataset
   args:
     test: False
 

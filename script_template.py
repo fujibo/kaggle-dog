@@ -9,6 +9,59 @@ from typing import Dict
 file_data: Dict = {file_data}
 
 
+yaml = """# conditional CIFAR10 generation with SN and projection discriminator
+batchsize: 64
+iteration: 50000
+iteration_decay_start: 0
+seed: 0
+display_interval: 100
+progressbar_interval: 100
+snapshot_interval: 10000
+evaluation_interval: 1000
+
+models:
+  generator:
+    fn: resnet_32.py
+    name: ResNetGenerator
+    args:
+      dim_z: 128
+      bottom_width: 4
+      ch: 256
+      n_classes: 0
+
+
+  discriminator:
+      fn: snresnet_32.py
+      name: SNResNetProjectionDiscriminator
+      args:
+        ch: 128
+        n_classes: 0
+
+dataset:
+  dataset_fn: cifar10.py
+  dataset_name: CIFAR10Dataset
+  args:
+    test: False
+
+adam:
+  alpha: 0.0002
+  beta1: 0.0
+  beta2: 0.9
+
+updater:
+  fn: updater.py
+  name: Updater
+  args:
+    n_dis: 5
+    n_gen_samples: 128
+    conditional: False
+    loss_type: hinge
+"""
+
+with open('/kaggle/working/config.yml', 'w') as f:
+    f.write(yaml)
+
+
 for path, encoded in file_data.items():
     print(path)
     path = Path(path)
@@ -21,6 +74,4 @@ def run(command):
 
 
 run('python setup.py develop --install-dir /kaggle/working')
-run('export LOGDIR=./logs')
-run('export CONFIG=./sn_cifar10_unconditional.yml')
-run('python train.py --config=$CONFIG --results_dir=$LOGDIR')
+run('python easy_gold/train.py --config=/kaggle/working/config.yml --results_dir=./logs')

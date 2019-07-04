@@ -23,14 +23,14 @@ def create_result_dir(result_dir, config_path, config):
         shutil.copy(fn, '{}/{}'.format(result_dir, bfn))
 
     copy_to_result_dir(config_path, result_dir)
-    copy_to_result_dir(
-        config.models['generator']['fn'], result_dir)
-    copy_to_result_dir(
-        config.models['discriminator']['fn'], result_dir)
-    copy_to_result_dir(
-        config.dataset['dataset_fn'], result_dir)
-    copy_to_result_dir(
-        config.updater['fn'], result_dir)
+    # copy_to_result_dir(
+    #     config.models['generator']['fn'], result_dir)
+    # copy_to_result_dir(
+    #     config.models['discriminator']['fn'], result_dir)
+    # copy_to_result_dir(
+    #     config.dataset['dataset_fn'], result_dir)
+    # copy_to_result_dir(
+    #     config.updater['fn'], result_dir)
 
 
 def load_models(config):

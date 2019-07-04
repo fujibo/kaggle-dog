@@ -21,4 +21,6 @@ def run(command):
 
 
 run('python setup.py develop --install-dir /kaggle/working')
-run('python easy_gold/main.py')
+run('export LOGDIR=./logs')
+run('export CONFIG=./sn_cifar10_unconditional.yml')
+run('python train.py --config=$CONFIG --results_dir=$LOGDIR')

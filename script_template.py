@@ -11,13 +11,13 @@ file_data: Dict = {file_data}
 
 yaml = """# conditional CIFAR10 generation with SN and projection discriminator
 batchsize: 64
-iteration: 50000
+iteration: 20000
 iteration_decay_start: 0
 seed: 0
-display_interval: 100
-progressbar_interval: 100
-snapshot_interval: 10000
-evaluation_interval: 1000
+display_interval: 1000
+progressbar_interval: 1000
+snapshot_interval: 20000
+evaluation_interval: 10000
 
 models:
   generator:
@@ -74,5 +74,5 @@ def run(command):
 
 
 run('python setup.py develop --install-dir /kaggle/working')
-run('python easy_gold/train.py --config=/kaggle/working/config.yml --results_dir=./logs')
-run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml')
+run('python easy_gold/train.py --config=/kaggle/working/config.yml --results_dir=/kaggle/working/logs/')
+run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot=/kaggle/working/logs/ResNetGenerator_20000.npz')

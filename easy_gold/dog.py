@@ -4,7 +4,7 @@ import os
 
 
 class DogDataset(dataset_mixin.DatasetMixin):
-    def __init__(self):
+    def __init__(self, **kwargs):
         root = '../input/all-dogs/all-dogs/'
         paths = sorted(os.listdir(root))
         self._dataset = chainer.datasets.ImageDataset(paths, root=root)

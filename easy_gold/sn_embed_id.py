@@ -3,7 +3,7 @@ from chainer.initializers import normal
 from chainer import link
 from chainer import variable
 from chainer.functions.array.broadcast import broadcast_to
-from source.functions.max_sv import max_singular_value
+from max_sv import max_singular_value
 import numpy as np
 
 

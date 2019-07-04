@@ -1,7 +1,7 @@
 import math
 import chainer
 from chainer import functions as F
-from source.links.sn_convolution_2d import SNConvolution2D
+from sn_convolution_2d import SNConvolution2D
 
 
 def _downsample(x):

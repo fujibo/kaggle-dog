@@ -3,7 +3,7 @@ import numpy as np
 from chainer.functions.array.broadcast import broadcast_to
 from chainer.functions.connection import linear
 from chainer.links.connection.linear import Linear
-from source.functions.max_sv import max_singular_value
+from max_sv import max_singular_value
 
 
 class SNLinear(Linear):

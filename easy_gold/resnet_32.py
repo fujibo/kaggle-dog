@@ -1,8 +1,8 @@
 import chainer
 import chainer.links as L
 from chainer import functions as F
-from gen_models.resblocks import Block
-from source.miscs.random_samples import sample_categorical, sample_continuous
+from gen_resblocks import Block
+from random_samples import sample_categorical, sample_continuous
 
 
 class ResNetGenerator(chainer.Chain):

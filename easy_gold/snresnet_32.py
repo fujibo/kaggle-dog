@@ -1,8 +1,8 @@
 import chainer
 from chainer import functions as F
-from source.links.sn_embed_id import SNEmbedID
-from source.links.sn_linear import SNLinear
-from dis_models.resblocks import Block, OptimizedBlock
+from sn_embed_id import SNEmbedID
+from sn_linear import SNLinear
+from dis_resblocks import Block, OptimizedBlock
 
 
 class SNResNetProjectionDiscriminator(chainer.Chain):

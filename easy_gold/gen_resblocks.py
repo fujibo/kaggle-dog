@@ -2,7 +2,7 @@ import math
 import chainer
 import chainer.links as L
 from chainer import functions as F
-from source.links.categorical_conditional_batch_normalization import CategoricalConditionalBatchNormalization
+from categorical_conditional_batch_normalization import CategoricalConditionalBatchNormalization
 
 
 def _upsample(x):

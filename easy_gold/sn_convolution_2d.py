@@ -4,7 +4,7 @@ from chainer import cuda
 from chainer.functions.array.broadcast import broadcast_to
 from chainer.functions.connection import convolution_2d
 from chainer.links.connection.convolution_2d import Convolution2D
-from source.functions.max_sv import max_singular_value
+from max_sv import max_singular_value
 
 
 class SNConvolution2D(Convolution2D):

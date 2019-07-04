@@ -10,7 +10,7 @@ from chainer.utils import argument
 from chainer import variable
 from chainer.links import EmbedID
 import chainer.functions as F
-from source.links.conditional_batch_normalization import ConditionalBatchNormalization
+from conditional_batch_normalization import ConditionalBatchNormalization
 
 
 class CategoricalConditionalBatchNormalization(ConditionalBatchNormalization):

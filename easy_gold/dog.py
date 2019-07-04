@@ -1,5 +1,6 @@
 import chainer
 from chainer.dataset import dataset_mixin
+import chainercv
 import os
 
 
@@ -13,5 +14,8 @@ class DogDataset(dataset_mixin.DatasetMixin):
         return len(self._dataset)
     
     def get_example(self, i):
-        # TODO: flip
-        return self._dataset[i]
+        img = self._dataset[i]
+        img = chainercv.transforms.resize(img, (32, 32))
+        img = chainercv.transforms.random_flip(img, x_random=True)
+        return img
+            

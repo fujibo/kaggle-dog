@@ -75,3 +75,4 @@ def run(command):
 
 run('python setup.py develop --install-dir /kaggle/working')
 run('python easy_gold/train.py --config=/kaggle/working/config.yml --results_dir=./logs')
+run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml')

@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--gpu', '-g', type=int, default=0)
     parser.add_argument('--results_dir', type=str, default='/kaggle')
     parser.add_argument('--snapshot', type=str, default='')
+    parser.add_argument('--post_proc', choices={'resize', 'sr'}, default='resize')
     parser.add_argument('--n_samples', type=int, default=10000)
     args = parser.parse_args()
     chainer.cuda.get_device_from_id(args.gpu).use()
@@ -45,7 +46,13 @@ def main():
 
     n, c, h, w = x.shape
     for i, img in enumerate(x):
-        chainercv.utils.write_image(img, os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))
+        if args.post_proc == 'resize':
+            chainercv.utils.write_image(
+                chainercv.transforms.resize(img, (64, 64)),
+                os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))
+        else:
+            raise NotImplementedError
+
     shutil.make_archive('images', 'zip', os.path.join(out, 'images'))
 
     # rows, columns = 100, args.n_samples // 100

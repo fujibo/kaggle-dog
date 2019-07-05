@@ -26,7 +26,7 @@ def main():
     parser.add_argument('--gpu', '-g', type=int, default=0)
     parser.add_argument('--results_dir', type=str, default='/kaggle')
     parser.add_argument('--snapshot', type=str, default='')
-    parser.add_argument('--post_proc', choices={'resize', 'resize_rand'}, default='resize_rand')
+    parser.add_argument('--post_proc', choices={'bilinear', 'bicubic', 'random'}, default='bicubic')
     parser.add_argument('--n_samples', type=int, default=10000)
     args = parser.parse_args()
     chainer.cuda.get_device_from_id(args.gpu).use()
@@ -46,11 +46,15 @@ def main():
 
     n, c, h, w = x.shape
     for i, img in enumerate(x):
-        if args.post_proc == 'resize':
+        if args.post_proc in {'bilinear', 'bicubic'}:
+            if args.post_proc == 'bilinear':
+                interpolation = Image.BILINEAR
+            else:
+                interpolation = Image.BICUBIC
             chainercv.utils.write_image(
-                chainercv.transforms.resize(img, (64, 64)),
+                chainercv.transforms.resize(img, (64, 64), interpolation=interpolation),
                 os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))
-        elif args.post_proc == 'resize_rand':
+        elif args.post_proc == 'random':
             chainercv.utils.write_image(
                 resize_with_random_interpolation(img, (64, 64)),
                 os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))

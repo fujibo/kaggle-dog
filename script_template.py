@@ -8,16 +8,16 @@ from typing import Dict
 # this is base64 encoded source code
 file_data: Dict = {file_data}
 
-
+iterations = 25000
 yaml = """# conditional CIFAR10 generation with SN and projection discriminator
 batchsize: 64
-iteration: 20000
+iteration: {0}
 iteration_decay_start: 0
 seed: 0
-display_interval: 1000
-progressbar_interval: 1000
-snapshot_interval: 20000
-evaluation_interval: 10000
+display_interval: {1}
+progressbar_interval: {1}
+snapshot_interval: {0}
+evaluation_interval: {0}
 
 models:
   generator:
@@ -56,7 +56,7 @@ updater:
     n_gen_samples: 128
     conditional: False
     loss_type: hinge
-"""
+""".format(iterations, iterations//10)
 
 with open('/kaggle/working/config.yml', 'w') as f:
     f.write(yaml)
@@ -75,4 +75,5 @@ def run(command):
 
 run('python setup.py develop --install-dir /kaggle/working')
 run('python easy_gold/train.py --config=/kaggle/working/config.yml --results_dir=/kaggle/working/logs/')
-run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot=/kaggle/working/logs/ResNetGenerator_20000.npz')
+model_path = '/kaggle/working/logs/ResNetGenerator_{}.npz'.format(iterations)
+run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={}'.format(model_path))

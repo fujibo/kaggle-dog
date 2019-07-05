@@ -6,7 +6,7 @@ import chainer
 import chainercv
 from PIL import Image
 import shutil
-from chainercv.links.ssd.transforms import resize_with_random_interpolation
+from chainercv.links.model.ssd.transforms import resize_with_random_interpolation
 base = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(base, '../'))
 from evaluation import gen_images

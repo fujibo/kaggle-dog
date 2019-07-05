@@ -6,7 +6,7 @@ import chainer
 import chainercv
 from PIL import Image
 import shutil
-
+from chainercv.links.ssd.transforms import resize_with_random_interpolation
 base = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(base, '../'))
 from evaluation import gen_images
@@ -26,7 +26,7 @@ def main():
     parser.add_argument('--gpu', '-g', type=int, default=0)
     parser.add_argument('--results_dir', type=str, default='/kaggle')
     parser.add_argument('--snapshot', type=str, default='')
-    parser.add_argument('--post_proc', choices={'resize', 'sr'}, default='resize')
+    parser.add_argument('--post_proc', choices={'resize', 'resize_rand'}, default='resize_rand')
     parser.add_argument('--n_samples', type=int, default=10000)
     args = parser.parse_args()
     chainer.cuda.get_device_from_id(args.gpu).use()
@@ -49,6 +49,10 @@ def main():
         if args.post_proc == 'resize':
             chainercv.utils.write_image(
                 chainercv.transforms.resize(img, (64, 64)),
+                os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))
+        elif args.post_proc == 'resize_rand':
+            chainercv.utils.write_image(
+                resize_with_random_interpolation(img, (64, 64)),
                 os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))
         else:
             raise NotImplementedError

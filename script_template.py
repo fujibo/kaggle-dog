@@ -41,7 +41,7 @@ dataset:
   dataset_fn: dog.py
   dataset_name: DogDataset
   args:
-    test: False
+    crop: True
 
 adam:
   alpha: 0.0002

@@ -55,7 +55,9 @@ class DogBBoxDataset(GetterDataset):
             breed, path = annot_[:-1], annot_[-1]
             self.image_annot_dict[path + '.jpg'].append(annot)
         
-        image_paths = list(self.image_annot_dict.keys())
+        image_paths = sorted(list(self.image_annot_dict.keys()))
+        # no image for ../input/all-dogs/all-dogs/n02105855_2933.jpg
+        image_paths = [path for path in image_paths if os.path.isfile(os.path.join(root_image, path))]
         self._dataset = chainer.datasets.ImageDataset(image_paths, root=root_image)
 
         self.add_getter('image', self.get_image)

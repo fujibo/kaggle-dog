@@ -51,8 +51,10 @@ def main():
                 interpolation = Image.BILINEAR
             else:
                 interpolation = Image.BICUBIC
+            img_res = chainercv.transforms.resize(img, (64, 64), interpolation=interpolation)
+            img_res = np.clip(img_res, 0.0, 255.0)
             chainercv.utils.write_image(
-                chainercv.transforms.resize(img, (64, 64), interpolation=interpolation),
+                img_res,
                 os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))
         elif args.post_proc == 'random':
             chainercv.utils.write_image(

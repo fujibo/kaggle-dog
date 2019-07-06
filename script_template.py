@@ -76,4 +76,4 @@ def run(command):
 run('python setup.py develop --install-dir /kaggle/working')
 run('python easy_gold/train.py --config=/kaggle/working/config.yml --results_dir=/kaggle/working/logs/')
 model_path = '/kaggle/working/logs/ResNetGenerator_{}.npz'.format(iterations)
-run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={}'.format(model_path))
+run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --post_proc bilinear'.format(model_path))

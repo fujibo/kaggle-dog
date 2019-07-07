@@ -9,7 +9,7 @@ import shutil
 from chainercv.links.model.ssd.transforms import resize_with_random_interpolation
 base = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(base, '../'))
-from evaluation import gen_images
+from evaluation import gen_images, gen_images_with_condition
 import yaml
 import yaml_utils
 
@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--gpu', '-g', type=int, default=0)
     parser.add_argument('--results_dir', type=str, default='/kaggle')
     parser.add_argument('--snapshot', type=str, default='')
+    parser.add_argument('--conditional', aciton='store_true')
     parser.add_argument('--post_proc', choices={'bilinear', 'bicubic', 'random'}, default='bicubic')
     parser.add_argument('--n_samples', type=int, default=10000)
     args = parser.parse_args()
@@ -41,9 +42,19 @@ def main():
 
     chainer.serializers.load_npz(args.snapshot, gen)
     np.random.seed(1234)
+    n_samples_per_class = [84] * 40 + [83] * 80
+    assert sum(n_samples_per_class) == args.n_samples
     with chainer.using_config('train', False), chainer.using_config('enable_backprop', False):
-        x = gen_images(gen, n=args.n_samples, batchsize=100)
-
+        if args.conditional:
+            x = list()
+            for c, n_samples in enumerate(n_samples_per_class):
+                x_c = gen_images_with_condition(gen, c=c, n=n_samples, batchsize=n_samples)
+                x.append(x_c)
+            x = np.concatenate(x, axis=0)
+            
+        else:
+            x = gen_images(gen, n=args.n_samples, batchsize=100)
+    
     n, c, h, w = x.shape
     for i, img in enumerate(x):
         if args.post_proc in {'bilinear', 'bicubic'}:

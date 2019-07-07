@@ -22,22 +22,22 @@ snapshot_interval: {0}
 evaluation_interval: {0}
 
 models:
-generator:
-fn: gen_models/resnet_32.py
-name: ResNetGenerator
-args:
-    dim_z: 128
-    bottom_width: 4
-    ch: 256
-    n_classes: 120
+    generator:
+        fn: resnet_32.py
+        name: ResNetGenerator
+        args:
+            dim_z: 128
+            bottom_width: 4
+            ch: 256
+            n_classes: 120
 
 
-discriminator:
-    fn: dis_models/snresnet_32.py
-    name: SNResNetProjectionDiscriminator
-    args:
-        ch: 128
-        n_classes: 120
+    discriminator:
+        fn: snresnet_32.py
+        name: SNResNetProjectionDiscriminator
+        args:
+            ch: 128
+            n_classes: 120
 
 dataset:
     dataset_fn: dog.py
@@ -72,22 +72,22 @@ snapshot_interval: {0}
 evaluation_interval: {0}
 
 models:
-generator:
-    fn: resnet_32.py
-    name: ResNetGenerator
-    args:
-    dim_z: 128
-    bottom_width: 4
-    ch: 256
-    n_classes: 0
-
-
-discriminator:
-    fn: snresnet_32.py
-    name: SNResNetProjectionDiscriminator
-    args:
-        ch: 128
+    generator:
+        fn: resnet_32.py
+        name: ResNetGenerator
+        args:
+        dim_z: 128
+        bottom_width: 4
+        ch: 256
         n_classes: 0
+
+
+    discriminator:
+        fn: snresnet_32.py
+        name: SNResNetProjectionDiscriminator
+        args:
+            ch: 128
+            n_classes: 0
 
 dataset:
     dataset_fn: dog.py
@@ -128,6 +128,6 @@ run('python setup.py develop --install-dir /kaggle/working')
 run('python easy_gold/train.py --config=/kaggle/working/config.yml --results_dir=/kaggle/working/logs/')
 model_path = '/kaggle/working/logs/ResNetGenerator_{}.npz'.format(iterations)
 if conditional:
-    run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --post_proc bilinear --coditional'.format(model_path))
+    run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --post_proc bilinear --conditional'.format(model_path))
 else:
     run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --post_proc bilinear'.format(model_path))

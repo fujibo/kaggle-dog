@@ -26,7 +26,7 @@ def main():
     parser.add_argument('--gpu', '-g', type=int, default=0)
     parser.add_argument('--results_dir', type=str, default='/kaggle')
     parser.add_argument('--snapshot', type=str, default='')
-    parser.add_argument('--conditional', aciton='store_true')
+    parser.add_argument('--conditional', action='store_true')
     parser.add_argument('--post_proc', choices={'bilinear', 'bicubic', 'random'}, default='bicubic')
     parser.add_argument('--n_samples', type=int, default=10000)
     args = parser.parse_args()

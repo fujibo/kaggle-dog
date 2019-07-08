@@ -117,9 +117,9 @@ def main():
     #                trigger=(config.evaluation_interval, 'iteration'),
     #                priority=extension.PRIORITY_WRITER)
     trainer.extend(extensions.ProgressBar(update_interval=config.progressbar_interval))
-    ext_opt_gen = extensions.LinearShift('alpha', (config.adam['alpha'], 0.),
+    ext_opt_gen = extensions.LinearShift('alpha', (config.adam_gen['alpha'], 0.),
                                          (config.iteration_decay_start, config.iteration), opt_gen)
-    ext_opt_dis = extensions.LinearShift('alpha', (config.adam['alpha'], 0.),
+    ext_opt_dis = extensions.LinearShift('alpha', (config.adam_dis['alpha'], 0.),
                                          (config.iteration_decay_start, config.iteration), opt_dis)
     trainer.extend(ext_opt_gen)
     trainer.extend(ext_opt_dis)

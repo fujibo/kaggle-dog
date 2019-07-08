@@ -45,7 +45,12 @@ dataset:
     args:
         crop: True
 
-adam:
+adam_gen:
+    alpha: 0.0002
+    beta1: 0.0
+    beta2: 0.9
+
+adam_dis:
     alpha: 0.0002
     beta1: 0.0
     beta2: 0.9
@@ -95,7 +100,12 @@ dataset:
     args:
         crop: True
 
-adam:
+adam_gen:
+    alpha: 0.0002
+    beta1: 0.0
+    beta2: 0.9
+
+adam_dis:
     alpha: 0.0002
     beta1: 0.0
     beta2: 0.9

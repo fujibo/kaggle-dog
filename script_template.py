@@ -75,58 +75,6 @@ updater:
 
 else:
     raise RuntimeError
-    yaml = """# conditional CIFAR10 generation with SN and projection discriminator
-batchsize: 64
-iteration: {0}
-iteration_decay_start: 0
-seed: 0
-display_interval: {1}
-progressbar_interval: {1}
-snapshot_interval: {0}
-evaluation_interval: {0}
-
-models:
-    generator:
-        fn: resnet_32.py
-        name: ResNetGenerator
-        args:
-        dim_z: 128
-        bottom_width: 4
-        ch: 256
-        n_classes: 0
-
-
-    discriminator:
-        fn: snresnet_32.py
-        name: SNResNetProjectionDiscriminator
-        args:
-            ch: 128
-            n_classes: 0
-
-dataset:
-    dataset_fn: dog.py
-    dataset_name: DogDataset
-    args:
-        crop: True
-
-adam_gen:
-    alpha: 0.0002
-    beta1: 0.0
-    beta2: 0.9
-
-adam_dis:
-    alpha: 0.0002
-    beta1: 0.0
-    beta2: 0.9
-
-updater:
-    fn: updater.py
-    name: Updater
-    args:
-        n_dis: 5
-        n_gen_samples: 128
-        conditional: False
-        loss_type: hinge""".format(iterations, iterations // 10)
 
 with open('/kaggle/working/config.yml', 'w') as f:
     f.write(yaml)

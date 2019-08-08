@@ -3,6 +3,7 @@ import chainer
 import chainer.links as L
 from chainer import functions as F
 from categorical_conditional_batch_normalization import CategoricalConditionalBatchNormalization
+from sn_convolution_2d import SNConvolution2D
 
 
 def _upsample(x):
@@ -16,7 +17,7 @@ def upsample_conv(x, conv):
 
 class Block(chainer.Chain):
     def __init__(self, in_channels, out_channels, hidden_channels=None, ksize=3, pad=1,
-                 activation=F.relu, upsample=False, n_classes=0):
+                 activation=F.relu, upsample=False, n_classes=0, use_sn=False):
         super(Block, self).__init__()
         initializer = chainer.initializers.GlorotUniform(math.sqrt(2))
         initializer_sc = chainer.initializers.GlorotUniform()
@@ -25,9 +26,14 @@ class Block(chainer.Chain):
         self.learnable_sc = in_channels != out_channels or upsample
         hidden_channels = out_channels if hidden_channels is None else hidden_channels
         self.n_classes = n_classes
+        
+        if use_sn:
+            ConvLayer = SNConvolution2D
+        else:
+            ConvLayer = L.Convolution2D
         with self.init_scope():
-            self.c1 = L.Convolution2D(in_channels, hidden_channels, ksize=ksize, pad=pad, initialW=initializer)
-            self.c2 = L.Convolution2D(hidden_channels, out_channels, ksize=ksize, pad=pad, initialW=initializer)
+            self.c1 = ConvLayer(in_channels, hidden_channels, ksize=ksize, pad=pad, initialW=initializer)
+            self.c2 = ConvLayer(hidden_channels, out_channels, ksize=ksize, pad=pad, initialW=initializer)
             if n_classes > 0:
                 self.b1 = CategoricalConditionalBatchNormalization(in_channels, n_cat=n_classes)
                 self.b2 = CategoricalConditionalBatchNormalization(hidden_channels, n_cat=n_classes)

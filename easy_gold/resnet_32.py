@@ -6,7 +6,7 @@ from random_samples import sample_categorical, sample_continuous
 
 
 class ResNetGenerator(chainer.Chain):
-    def __init__(self, ch=256, dim_z=128, bottom_width=4, activation=F.relu, n_classes=0, distribution="normal"):
+    def __init__(self, ch=256, dim_z=128, bottom_width=4, activation=F.relu, n_classes=0, distribution="normal", use_sn=False):
         super(ResNetGenerator, self).__init__()
         self.bottom_width = bottom_width
         self.activation = activation
@@ -15,9 +15,9 @@ class ResNetGenerator(chainer.Chain):
         self.n_classes = n_classes
         with self.init_scope():
             self.l1 = L.Linear(dim_z, (bottom_width ** 2) * ch, initialW=chainer.initializers.GlorotUniform())
-            self.block2 = Block(ch, ch, activation=activation, upsample=True, n_classes=n_classes)
-            self.block3 = Block(ch, ch, activation=activation, upsample=True, n_classes=n_classes)
-            self.block4 = Block(ch, ch, activation=activation, upsample=True, n_classes=n_classes)
+            self.block2 = Block(ch, ch, activation=activation, upsample=True, n_classes=n_classes, use_sn=use_sn)
+            self.block3 = Block(ch, ch, activation=activation, upsample=True, n_classes=n_classes, use_sn=use_sn)
+            self.block4 = Block(ch, ch, activation=activation, upsample=True, n_classes=n_classes, use_sn=use_sn)
             self.b5 = L.BatchNormalization(ch)
             self.c5 = L.Convolution2D(ch, 3, ksize=3, stride=1, pad=1, initialW=chainer.initializers.GlorotUniform())
 

@@ -70,9 +70,9 @@ def main():
     models = {"gen": gen, "dis": dis}
     # Optimizer
     opt_gen = make_optimizer(
-        gen, alpha=config.adam['alpha'], beta1=config.adam['beta1'], beta2=config.adam['beta2'])
+        gen, alpha=config.adam_gen['alpha'], beta1=config.adam_gen['beta1'], beta2=config.adam_gen['beta2'])
     opt_dis = make_optimizer(
-        dis, alpha=config.adam['alpha'], beta1=config.adam['beta1'], beta2=config.adam['beta2'])
+        dis, alpha=config.adam_dis['alpha'], beta1=config.adam_dis['beta1'], beta2=config.adam_dis['beta2'])
     opts = {"opt_gen": opt_gen, "opt_dis": opt_dis}
     # Dataset
     if config['dataset'][
@@ -117,9 +117,9 @@ def main():
     #                trigger=(config.evaluation_interval, 'iteration'),
     #                priority=extension.PRIORITY_WRITER)
     trainer.extend(extensions.ProgressBar(update_interval=config.progressbar_interval))
-    ext_opt_gen = extensions.LinearShift('alpha', (config.adam['alpha'], 0.),
+    ext_opt_gen = extensions.LinearShift('alpha', (config.adam_gen['alpha'], 0.),
                                          (config.iteration_decay_start, config.iteration), opt_gen)
-    ext_opt_dis = extensions.LinearShift('alpha', (config.adam['alpha'], 0.),
+    ext_opt_dis = extensions.LinearShift('alpha', (config.adam_dis['alpha'], 0.),
                                          (config.iteration_decay_start, config.iteration), opt_dis)
     trainer.extend(ext_opt_gen)
     trainer.extend(ext_opt_dis)

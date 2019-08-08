@@ -9,10 +9,16 @@ from typing import Dict
 file_data: Dict = {file_data}
 
 conditional = True
-iterations = 25000
+size = 64
+if size == 64:
+    iterations = 25000
+    batch_size = 32
+else:
+    iterations = 50000
+    batch_size = 64
 if conditional:
     yaml = """# conditional CIFAR10 generation with SN and projection discriminator
-batchsize: 64
+batchsize: {3}
 iteration: {0}
 iteration_decay_start: 0
 seed: 0
@@ -30,6 +36,7 @@ models:
             bottom_width: 4
             ch: 256
             n_classes: 120
+            use_sn: True
 
 
     discriminator:
@@ -44,6 +51,7 @@ dataset:
     dataset_name: DogDataset
     args:
         crop: True
+        size: {2}
 
 adam_gen:
     alpha: 0.0002
@@ -51,7 +59,7 @@ adam_gen:
     beta2: 0.9
 
 adam_dis:
-    alpha: 0.0002
+    alpha: 0.0006
     beta1: 0.0
     beta2: 0.9
 
@@ -59,13 +67,14 @@ updater:
     fn: updater.py
     name: Updater
     args:
-        n_dis: 5
+        n_dis: 2
         n_gen_samples: 128
         conditional: True
         loss_type: hinge
-""".format(iterations, iterations // 10)
+""".format(iterations, iterations // 5, size, batch_size)
 
 else:
+    raise RuntimeError
     yaml = """# conditional CIFAR10 generation with SN and projection discriminator
 batchsize: 64
 iteration: {0}
@@ -137,7 +146,10 @@ def run(command):
 run('python setup.py develop --install-dir /kaggle/working')
 run('python easy_gold/train.py --config=/kaggle/working/config.yml --results_dir=/kaggle/working/logs/')
 model_path = '/kaggle/working/logs/ResNetGenerator_{}.npz'.format(iterations)
-if conditional:
-    run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --post_proc bilinear --conditional'.format(model_path))
+# if conditional:
+if size == 64:
+    run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --conditional'.format(model_path))
 else:
-    run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --post_proc bilinear'.format(model_path))
+    run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --post_proc bilinear --conditional'.format(model_path))
+# else:
+#     run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --post_proc bilinear'.format(model_path))

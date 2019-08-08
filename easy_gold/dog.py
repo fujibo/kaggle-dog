@@ -10,10 +10,11 @@ import xml.etree.ElementTree as ET
 
 
 class DogDataset(dataset_mixin.DatasetMixin):
-    def __init__(self, crop=False, **kwargs):
+    def __init__(self, crop=False, size=32, **kwargs):
         root = '../input/all-dogs/all-dogs/'
         paths = sorted(os.listdir(root))
         self.crop = crop
+        self.size = size
         if self.crop:
             self._dataset = DogCropDataset()
         else:
@@ -33,8 +34,8 @@ class DogDataset(dataset_mixin.DatasetMixin):
             label = 0
 
         # img = chainercv.transforms.resize(img, (32, 32))
-        img = chainercv.transforms.scale(img, 32, fit_short=True)
-        img = chainercv.transforms.random_crop(img, (32, 32))
+        img = chainercv.transforms.scale(img, self.size, fit_short=True)
+        img = chainercv.transforms.random_crop(img, (self.size, self.size))
         img = chainercv.transforms.random_flip(img, x_random=True)
         img = (img / 128. - 1.).astype(np.float32)
         img += np.random.uniform(size=img.shape, low=0., high=1. / 128)

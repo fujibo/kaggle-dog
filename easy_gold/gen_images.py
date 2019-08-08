@@ -27,7 +27,7 @@ def main():
     parser.add_argument('--results_dir', type=str, default='/kaggle')
     parser.add_argument('--snapshot', type=str, default='')
     parser.add_argument('--conditional', action='store_true')
-    parser.add_argument('--post_proc', choices={'bilinear', 'bicubic', 'random'}, default='bicubic')
+    parser.add_argument('--post_proc', choices={'bilinear', 'bicubic', 'random', None}, default=None)
     parser.add_argument('--n_samples', type=int, default=10000)
     args = parser.parse_args()
     chainer.cuda.get_device_from_id(args.gpu).use()
@@ -64,15 +64,15 @@ def main():
                 interpolation = Image.BICUBIC
             img_res = chainercv.transforms.resize(img, (64, 64), interpolation=interpolation)
             img_res = np.clip(img_res, 0.0, 255.0)
-            chainercv.utils.write_image(
-                img_res,
-                os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))
         elif args.post_proc == 'random':
-            chainercv.utils.write_image(
-                resize_with_random_interpolation(img, (64, 64)),
-                os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))
+            img_res = resize_with_random_interpolation(img, (64, 64))
+        elif args.post_proc is None:
+            img_res = img
         else:
             raise NotImplementedError
+        chainercv.utils.write_image(
+            img_res,
+            os.path.join(out, 'images', 'image_{:05d}.png'.format(i)))
 
     shutil.make_archive('images', 'zip', os.path.join(out, 'images'))
 

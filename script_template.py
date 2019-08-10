@@ -12,10 +12,12 @@ conditional = True
 size = 64
 if size == 64:
     iterations = 25000
-    batch_size = 32
+    batch_size = 64
+    ch_gen, ch_dis = 64, 64
 else:
     iterations = 50000
     batch_size = 64
+    ch_gen, ch_dis = 256, 128
 if conditional:
     yaml = """# conditional CIFAR10 generation with SN and projection discriminator
 batchsize: {3}
@@ -29,21 +31,21 @@ evaluation_interval: {0}
 
 models:
     generator:
-        fn: resnet_32.py
+        fn: resnet_{2}.py
         name: ResNetGenerator
         args:
             dim_z: 128
             bottom_width: 4
-            ch: 256
+            ch: {4}
             n_classes: 120
             use_sn: True
 
 
     discriminator:
-        fn: snresnet_32.py
+        fn: snresnet_{2}.py
         name: SNResNetProjectionDiscriminator
         args:
-            ch: 128
+            ch: {5}
             n_classes: 120
 
 dataset:
@@ -71,7 +73,7 @@ updater:
         n_gen_samples: 128
         conditional: True
         loss_type: hinge
-""".format(iterations, iterations // 5, size, batch_size)
+""".format(iterations, iterations // 5, size, batch_size, ch_gen, ch_dis)
 
 else:
     raise RuntimeError

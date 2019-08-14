@@ -11,8 +11,8 @@ file_data: Dict = {file_data}
 conditional = True
 size = 64
 if size == 64:
-    iterations = 25000
-    batch_size = 64
+    iterations = 24000
+    batch_size = 128
     ch_gen, ch_dis = 64, 64
 else:
     iterations = 50000
@@ -22,7 +22,7 @@ if conditional:
     yaml = """# conditional CIFAR10 generation with SN and projection discriminator
 batchsize: {3}
 iteration: {0}
-iteration_decay_start: 0
+iteration_decay_start: 12000
 seed: 0
 display_interval: {1}
 progressbar_interval: {1}
@@ -61,7 +61,7 @@ adam_gen:
     beta2: 0.9
 
 adam_dis:
-    alpha: 0.0006
+    alpha: 0.0005
     beta1: 0.0
     beta2: 0.9
 

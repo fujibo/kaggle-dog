@@ -22,7 +22,7 @@ if conditional:
     yaml = """# conditional CIFAR10 generation with SN and projection discriminator
 batchsize: {3}
 iteration: {0}
-iteration_decay_start: 12000
+iteration_decay_start: 18000
 seed: 0
 display_interval: {1}
 progressbar_interval: {1}
@@ -54,6 +54,7 @@ dataset:
     args:
         crop: True
         size: {2}
+        use_cache: False
 
 adam_gen:
     alpha: 0.0002

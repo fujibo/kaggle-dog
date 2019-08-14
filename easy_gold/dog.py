@@ -10,25 +10,38 @@ import xml.etree.ElementTree as ET
 
 
 class DogDataset(dataset_mixin.DatasetMixin):
-    def __init__(self, crop=False, size=32, **kwargs):
+    def __init__(self, crop=False, size=32, use_cache=False, **kwargs):
         root = '../input/all-dogs/all-dogs/'
         paths = sorted(os.listdir(root))
         self.crop = crop
         self.size = size
+        self.use_cache = use_cache
         if self.crop:
             self._dataset = DogCropDataset()
         else:
             self._dataset = chainer.datasets.ImageDataset(paths, root=root)
+        
+        self.idx_cache_dict = dict()
 
     def __len__(self):
         return len(self._dataset)
     
     def get_example(self, i):
         if self.crop:
-            img, bbox, label = self._dataset[i]
-            # TODO: translation
-            ymin, xmin, ymax, xmax = bbox
-            img = img[:, ymin:ymax, xmin:xmax]
+            if self.use_cache and i in self.idx_cache_dict:
+                path, label = self.idx_cache_dict[i]
+                img = chainercv.utils.read_image(path)
+
+            else:
+                img, bbox, label = self._dataset[i]
+                # TODO: translation
+                ymin, xmin, ymax, xmax = bbox
+                img = img[:, ymin:ymax, xmin:xmax]
+                if self.use_cache:
+                    path = '/kaggle/{}.png'.format(i)
+                    chainercv.utils.write_image(img, path)
+                    self.idx_cache_dict[i] = (path, label)
+
         else:
             img = self._dataset[i]
             label = 0

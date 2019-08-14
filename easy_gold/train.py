@@ -58,6 +58,7 @@ def main():
     #                     help='path to the inception model')
     parser.add_argument('--snapshot', type=str, default='',
                         help='path to the snapshot')
+    parser.add_argument('--nolog', action='store_true')
     parser.add_argument('--loaderjob', type=int,
                         help='number of parallel data loading processes')
 
@@ -99,24 +100,25 @@ def main():
     for m in models.values():
         trainer.extend(extensions.snapshot_object(
             m, m.__class__.__name__ + '_{.updater.iteration}.npz'), trigger=(config.snapshot_interval, 'iteration'))
-    trainer.extend(extensions.LogReport(keys=report_keys,
-                                        trigger=(config.display_interval, 'iteration')))
-    trainer.extend(extensions.PrintReport(report_keys), trigger=(config.display_interval, 'iteration'))
-    if gen.n_classes > 0:
-        trainer.extend(sample_generate_conditional(gen, out, n_classes=gen.n_classes),
-                       trigger=(config.evaluation_interval, 'iteration'),
-                       priority=extension.PRIORITY_WRITER)
-    else:
-        trainer.extend(sample_generate(gen, out),
-                       trigger=(config.evaluation_interval, 'iteration'),
-                       priority=extension.PRIORITY_WRITER)
-    trainer.extend(sample_generate_light(gen, out, rows=10, cols=10),
-                   trigger=(config.evaluation_interval // 10, 'iteration'),
-                   priority=extension.PRIORITY_WRITER)
-    # trainer.extend(calc_inception(gen, n_ims=5000, splits=1, path=args.inception_model_path),
-    #                trigger=(config.evaluation_interval, 'iteration'),
-    #                priority=extension.PRIORITY_WRITER)
-    trainer.extend(extensions.ProgressBar(update_interval=config.progressbar_interval))
+    if args.nolog:
+        trainer.extend(extensions.LogReport(keys=report_keys,
+                                            trigger=(config.display_interval, 'iteration')))
+        trainer.extend(extensions.PrintReport(report_keys), trigger=(config.display_interval, 'iteration'))
+        if gen.n_classes > 0:
+            trainer.extend(sample_generate_conditional(gen, out, n_classes=gen.n_classes),
+                        trigger=(config.evaluation_interval, 'iteration'),
+                        priority=extension.PRIORITY_WRITER)
+        else:
+            trainer.extend(sample_generate(gen, out),
+                        trigger=(config.evaluation_interval, 'iteration'),
+                        priority=extension.PRIORITY_WRITER)
+        trainer.extend(sample_generate_light(gen, out, rows=10, cols=10),
+                    trigger=(config.evaluation_interval // 10, 'iteration'),
+                    priority=extension.PRIORITY_WRITER)
+        # trainer.extend(calc_inception(gen, n_ims=5000, splits=1, path=args.inception_model_path),
+        #                trigger=(config.evaluation_interval, 'iteration'),
+        #                priority=extension.PRIORITY_WRITER)
+        trainer.extend(extensions.ProgressBar(update_interval=config.progressbar_interval))
     ext_opt_gen = extensions.LinearShift('alpha', (config.adam_gen['alpha'], 0.),
                                          (config.iteration_decay_start, config.iteration), opt_gen)
     ext_opt_dis = extensions.LinearShift('alpha', (config.adam_dis['alpha'], 0.),

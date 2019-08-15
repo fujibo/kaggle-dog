@@ -16,7 +16,7 @@ ch_gen, ch_dis = 64, 64
 yaml = """# conditional CIFAR10 generation with SN and projection discriminator
 batchsize: {3}
 iteration: {0}
-iteration_decay_start: 12000
+iteration_decay_start: 18000
 seed: 42
 display_interval: {1}
 progressbar_interval: {1}

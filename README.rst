@@ -1,25 +1,23 @@
-Kaggle script build system template
+Generative Dog Images
 ===================================
 
-Goal is to develop code normally, separating it into modules,
-and then package it into a single script for kaggle script submission.
+This is a chainer implementation of https://www.kaggle.com/c/generative-dog-images/overview.
 
-To create a submission, run ``./build.py``, this would
-compress the whole package into a script in ``./build/script.py``,
-which you can then submit into a kaggle script
-(most convenient way is via file upload).
+I borrowed codes mainly from https://github.com/pfnet-research/sngan_projection.
 
-Example kaggle script created in this way:
-https://www.kaggle.com/lopuhin/kaggle-script-template
+Folder Structure
+------------------
+- Hyper-parameters and commands are written in `script_template.py`
+- Main codes are in `easy_gold/`.
 
-Adjustment:
+How to Build & Run
+------------------
+See https://www.kaggle.com/lopuhin/kaggle-script-template.
 
-- if you want to rename the package from ``easy_gold`` (not sure why?)
-  then you need to change ``build.py``, ``setup.py`` and
-  ``script_template.py``.
-- if you want to adjust the entry point (currently ``easy_gold/main.py``),
-  or run several commands, change ``script_template.py``.
+License
+------------------
+MIT.
+Copyright (c)
 
-This is quite basic, feel free to adjust to your needs.
-
-License is MIT.
+- Preferred Networks, Inc.
+- @lopuhin

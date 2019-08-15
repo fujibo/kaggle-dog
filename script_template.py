@@ -8,22 +8,16 @@ from typing import Dict
 # this is base64 encoded source code
 file_data: Dict = {file_data}
 
-conditional = True
 size = 64
-if size == 64:
-    iterations = 24000
-    batch_size = 128
-    ch_gen, ch_dis = 64, 64
-else:
-    iterations = 50000
-    batch_size = 64
-    ch_gen, ch_dis = 256, 128
-if conditional:
-    yaml = """# conditional CIFAR10 generation with SN and projection discriminator
+iterations = 24000
+batch_size = 128
+ch_gen, ch_dis = 64, 64
+
+yaml = """# conditional CIFAR10 generation with SN and projection discriminator
 batchsize: {3}
 iteration: {0}
-iteration_decay_start: 18000
-seed: 0
+iteration_decay_start: 12000
+seed: 42
 display_interval: {1}
 progressbar_interval: {1}
 snapshot_interval: {0}
@@ -76,9 +70,6 @@ updater:
         loss_type: hinge
 """.format(iterations, iterations // 5, size, batch_size, ch_gen, ch_dis)
 
-else:
-    raise RuntimeError
-
 with open('/kaggle/working/config.yml', 'w') as f:
     f.write(yaml)
 
@@ -97,10 +88,4 @@ def run(command):
 run('python setup.py develop --install-dir /kaggle/working')
 run('python easy_gold/train.py --config=/kaggle/working/config.yml --results_dir=/kaggle/working/logs/')
 model_path = '/kaggle/working/logs/ResNetGenerator_{}.npz'.format(iterations)
-# if conditional:
-if size == 64:
-    run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --conditional'.format(model_path))
-else:
-    run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --post_proc bilinear --conditional'.format(model_path))
-# else:
-#     run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --post_proc bilinear'.format(model_path))
+run('python easy_gold/gen_images.py --config=/kaggle/working/config.yml --snapshot={} --conditional'.format(model_path))
